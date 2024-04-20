@@ -2,12 +2,13 @@ from typing import Optional
 
 from app.src.exceptions import (
   ProductNotFoundException,
-  ProductRepositoryException
+  ProductRepositoryException,
+  ProductBusinessException,
+  ProductNoneException
 )
 
 from app.src.core.models import Product
 from app.src.repositories import ProductRepository
-
 from .request import EditProductRequest
 from .response import EditProductResponse
 
@@ -25,7 +26,7 @@ class EditProduct:
       updated_product = Product(**request._asdict())
       response = self.product_repository.edit(updated_product)
       if not response:
-        pass
+        raise ProductNoneException()
       return  EditProductResponse(**response._asdict())
     except ProductRepositoryException as e:
-      pass
+      raise ProductBusinessException(str(e))

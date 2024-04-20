@@ -9,9 +9,7 @@ from api.src.create_app import create_app
 def test__should_return_a_list_of_products(api_client):
 
     response = api_client.get("/products/")
-    print(response)
     products = response.json().get("products")
-    print(products)
 
     assert response.status_code == HTTPStatus.OK
     assert products == []
