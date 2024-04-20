@@ -1,7 +1,9 @@
 from decimal import Decimal
+
+import pytest
 from app.src.use_cases import (EditProduct, EditProductRequest, EditProductResponse, CreateProduct, CreateProductRequest)
 from factories import memory_product_repository
-
+from app.src.exceptions import ProductNotFoundException
 
 class TestEditProductUseCase:
     
@@ -36,3 +38,26 @@ class TestEditProductUseCase:
         assert response.is_available == False
 
 
+    def test_should_return_an_exception_when_product_to_update_is_not_found(self, product_factory):
+        product = product_factory()
+        product_memory_repository = memory_product_repository()
+        edit_request = EditProductRequest(
+            product_id = product.product_id,
+            user_id = product.user_id,
+            name = product.name,
+            description = product.description,
+            price = product.price,
+            location = product.location,
+            status = product.status,
+            is_available = False
+        )
+        edit_product_use_case = EditProduct(product_memory_repository)
+       
+        expected_exception = ProductNotFoundException(product.product_id)
+        message_exception = f"The Product with the id '{product.product_id}' does not exist."
+
+        with pytest.raises(ProductNotFoundException) as captured_exception:
+            edit_product_use_case(edit_request)
+
+        assert type(captured_exception.value) is type(expected_exception)
+        assert message_exception == str(captured_exception.value)
