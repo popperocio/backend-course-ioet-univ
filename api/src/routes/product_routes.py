@@ -41,7 +41,12 @@ async def get_products(
 ) -> ListProductResponse:
     response = use_case()
     response_dto: ListProductResponseDto = ListProductResponseDto(
-        products= [ProductBase(**product._asdict()) for product in response.products]
+        products=[ProductBase(
+            **{
+                **product._asdict(),
+                "status": product.status.value 
+            }
+        ) for product in response.products]
     )
     return response_dto
 

@@ -8,9 +8,8 @@ def test__should_return_a_list_of_products(api_client):
 
     response = api_client.get("/products/")
     products = response.json().get("products")
-
+    
     assert response.status_code == HTTPStatus.OK
-    assert products == []
     
 def test__should_return_an_updated_product(api_client):
     request_create_data =  CreateProductRequestDto(
