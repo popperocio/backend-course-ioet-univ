@@ -43,3 +43,25 @@ def test__should_return_an_updated_product(api_client):
     assert response.json()["product_id"] == request_create_data.product_id
     assert response.json()["location"] == "Tandil"
     assert response.json()["is_available"] == False
+    
+
+def test__should_return_a_deleted_product_id(api_client):
+    request_create_data =  CreateProductRequestDto(
+        product_id="99002",
+        user_id="1",
+        name="Headphones",
+        description="Noise cancellation",
+        price=10.5,
+        location="Quito",
+        status="New",
+        is_available=True,      
+    )
+    serialized_request_data_to_create = json.dumps(request_create_data.model_dump(), use_decimal=True)
+    json_payload_to_create = json.loads(serialized_request_data_to_create)
+    api_client.post("/products/", json=json_payload_to_create)
+    product_id = request_create_data.product_id
+
+    response = api_client.delete(f"/products/{product_id}")
+    
+    assert response.status_code == HTTPStatus.OK
+    assert response.json()["product_id"] == product_id

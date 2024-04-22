@@ -47,4 +47,4 @@ class MemoryProductRepository(ProductRepository):
           self.products.remove(existing_product)
           return product_id
     except Exception:
-      pass
+      raise ProductRepositoryException(method="delete")

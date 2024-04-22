@@ -29,3 +29,7 @@ class EditProductRequestDto(ProductBase):
     
 class EditProductResponseDto(ProductBase):
     ...
+    
+class DeleteProductResponseDto(BaseModel):
+    product_id: str
+    
