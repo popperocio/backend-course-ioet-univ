@@ -10,7 +10,10 @@ from app.src.use_cases import (
     FindProductByIdRequest, 
     CreateProduct, 
     CreateProductResponse, 
-    CreateProductRequest
+    CreateProductRequest,
+    EditProduct,
+    EditProductRequest,
+    EditProductResponse
 )
 from ..dtos import (
     ProductBase,
@@ -18,11 +21,15 @@ from ..dtos import (
     CreateProductRequestDto,
     CreateProductResponseDto,
     FindProductByIdResponseDto,
+    EditProductResponseDto,
+    EditProductRequestDto
 )
 from factories.use_cases import (
     list_product_use_case, 
     find_product_by_id_use_case,
     create_product_use_case,
+    edit_product_use_case
+    
 )
 from app.src.core.models import Product
 
@@ -63,4 +70,22 @@ async def create_product(
         is_available=request.is_available
     ))
     response_dto: CreateProductResponseDto = CreateProductResponseDto(**response._asdict())
+    return response_dto
+
+@product_router.put("/", response_model=EditProductResponseDto)
+async def edit_product(
+    request: EditProductRequestDto,
+    use_case: EditProduct = Depends(edit_product_use_case)
+) -> EditProductResponse:
+    response = use_case(EditProductRequest(
+        product_id=request.product_id, 
+        user_id=request.user_id, 
+        name=request.name, 
+        description=request.description, 
+        price=request.price, 
+        location=request.location, 
+        status=request.status, 
+        is_available=request.is_available
+    ))
+    response_dto: EditProductResponseDto = EditProductResponseDto(**response._asdict())
     return response_dto
