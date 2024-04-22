@@ -29,9 +29,16 @@ class MemoryProductRepository(ProductRepository):
     except Exception:
       raise ProductRepositoryException(method="find")
 
-  def edit(self, product: Product) -> Product:
-    # Needs Implementation
-    pass
+  def edit(self, product_to_edit: Product) -> Product:
+    try:
+      for product in self.products:
+        if product.product_id == product_to_edit.product_id:
+          self.products.append(product_to_edit)
+          self.products.remove(product)
+          return product_to_edit
+        return None
+    except Exception:
+      raise ProductRepositoryException(method="edit")
 
   def delete(self, product_id: str) -> Product:
     # Needs Implementation
