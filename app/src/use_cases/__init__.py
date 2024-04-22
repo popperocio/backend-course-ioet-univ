@@ -12,5 +12,8 @@ from .product import (
   CreateProductRequest,
   EditProduct,
   EditProductRequest,
-  EditProductResponse
+  EditProductResponse,
+  DeleteProduct,
+  DeleteProductRequest,
+  DeleteProductResponse
 )
