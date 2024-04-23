@@ -65,3 +65,27 @@ def test__should_return_a_deleted_product_id(api_client):
     
     assert response.status_code == HTTPStatus.OK
     assert response.json()["product_id"] == product_id
+
+
+def test__should_return_a_list_of_filtered_products_by_status(api_client, products_factory):
+    products = products_factory(4)
+    for product in products:
+        request_create_data =  CreateProductRequestDto(
+        product_id=product.product_id,
+        user_id=product.user_id,
+        name=product.name,
+        description=product.description,
+        price=product.price,
+        location=product.location,
+        status=product.status,
+        is_available=product.is_available,      
+        )
+        serialized_request_data_to_create = json.dumps(request_create_data.model_dump(), use_decimal=True)
+        json_payload_to_create = json.loads(serialized_request_data_to_create)
+        api_client.post("/products/", json=json_payload_to_create)
+    request = "For parts"
+    response = api_client.get("/products/filter/status", params={"status": {request}})
+   
+    assert response.status_code == HTTPStatus.OK
+
+    
