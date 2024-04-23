@@ -16,7 +16,10 @@ from app.src.use_cases import (
     EditProductResponse,
     DeleteProduct, 
     DeleteProductRequest,
-    DeleteProductResponse
+    DeleteProductResponse,
+    FilterProductsByStatus, 
+    FilterProductsByStatusRequest,
+    FilterProductsByStatusResponse
 )
 from ..dtos import (
     ProductBase,
@@ -26,14 +29,17 @@ from ..dtos import (
     FindProductByIdResponseDto,
     EditProductResponseDto,
     EditProductRequestDto,
-    DeleteProductResponseDto
+    DeleteProductResponseDto,
+    FilterProductsByStatusResponseDto,
+    FilterProductsByStatusRequestDto
 )
 from factories.use_cases import (
     list_product_use_case, 
     find_product_by_id_use_case,
     create_product_use_case,
     edit_product_use_case,
-    delete_product_use_case
+    delete_product_use_case,
+    filter_products_by_status
 )
 from app.src.core.models import Product
 
@@ -109,4 +115,20 @@ async def delete_product(
        product_id=product_id
     ))
     response_dto: DeleteProductResponseDto = DeleteProductResponseDto(**response._asdict())
+    return response_dto
+
+@product_router.get("/filter/status", response_model=FilterProductsByStatusResponseDto)
+async def get_filtered_products_by_status(
+    status: str,
+    use_case: FilterProductsByStatus = Depends(filter_products_by_status)
+) -> FilterProductsByStatusResponse:
+    response = use_case(FilterProductsByStatusRequest(status))
+    response_dto: FilterProductsByStatusResponseDto = FilterProductsByStatusResponseDto(
+        products=[ProductBase(
+            **{
+                **product._asdict(),
+                "status": product.status 
+            }
+        ) for product in response.products]
+    )
     return response_dto

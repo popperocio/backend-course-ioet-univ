@@ -48,3 +48,13 @@ class MemoryProductRepository(ProductRepository):
           return product_id
     except Exception:
       raise ProductRepositoryException(method="delete")
+    
+  def filter_products_by_status(self, status:str) -> List[Product]:
+    filtered_products = []
+    try:
+      for product in self.products:
+        if product.status == status:
+          filtered_products.append(product)
+      return filtered_products
+    except Exception:
+      raise ProductRepositoryException(method="filter products by status")

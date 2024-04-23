@@ -24,3 +24,7 @@ class ProductRepository(ABC):
   @abstractmethod
   def delete(self, product_id: str) -> Product:
     raise NotImplementedError
+
+  @abstractmethod
+  def filter_products_by_status(self, status:str) -> List[Product]:
+    raise NotImplementedError

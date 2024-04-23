@@ -32,4 +32,9 @@ class EditProductResponseDto(ProductBase):
     
 class DeleteProductResponseDto(BaseModel):
     product_id: str
-    
+       
+class FilterProductsByStatusRequestDto(BaseModel):
+   status: str
+   
+class FilterProductsByStatusResponseDto(BaseModel):
+   products: List[ProductBase]
